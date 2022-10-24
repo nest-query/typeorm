@@ -1,9 +1,8 @@
-import { Class } from '@libs/nest-core';
+import { Class } from '@nest-query/api';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DynamicModule } from '@nestjs/common';
 import { Connection, ConnectionOptions } from 'typeorm';
 import { createTypeOrmQueryServiceProviders, createMultitenancyTypeOrmQueryRepositoryProviders } from './providers';
-import { IConnectionManager } from '@libs/nest-core/connection/connection.manager';
 
 export class NestCoreTypeOrmModule {
   static forFeature(entities: Class<unknown>[], connection?: Connection | ConnectionOptions | string): DynamicModule {

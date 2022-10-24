@@ -1,5 +1,5 @@
 import { Brackets, WhereExpression } from 'typeorm';
-import { Filter, FilterComparisons, FilterFieldComparison } from '@libs/nest-core';
+import { Filter, FilterComparisons, FilterFieldComparison } from '@nest-query/api';
 import { EntityComparisonField, SQLComparisonBuilder } from './sql-comparison.builder';
 import { NestedRecord } from './filter-query.builder';
 

@@ -17,7 +17,7 @@ import {
   MapperFactory,
   FindRelationOptions,
   ModifyRelationOptions,
-} from '@libs/nest-core';
+} from '@nest-query/api';
 import {
   Repository,
   DeleteResult,
@@ -34,7 +34,7 @@ import {
   EntityIndexRelation,
   RelationQueryBuilder,
 } from '../query';
-import { IConnectionManager } from '@libs/nest-core/connection/connection.manager';
+import { IConnectionManager } from '@nest-query/api';
 import { omit, filter } from 'lodash';
 import { RelationMetadata } from 'typeorm/metadata/RelationMetadata';
 
@@ -92,6 +92,7 @@ export class TenantAwareTypeOrmQueryRepository<Entity>
     const filterQueryBuilder = new FilterQueryBuilder<Entity>(repo);
 
     if (context.tenant && repo.metadata.hasColumnWithPropertyPath('tenant')) {
+      query.filter = query.filter || {};
       query.filter.and = query.filter.and || [];
       query.filter.and.push({
         tenant: {

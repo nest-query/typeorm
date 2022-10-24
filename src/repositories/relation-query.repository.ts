@@ -9,7 +9,7 @@ import {
   FindRelationOptions,
   GetByIdOptions,
   IContext,
-} from '@libs/nest-core';
+} from '@nest-query/api';
 import { Repository, RelationQueryBuilder as TypeOrmRelationQueryBuilder, ObjectLiteral } from 'typeorm';
 import { filter, omit } from 'lodash';
 import { AggregateBuilder, EntityIndexRelation, FilterQueryBuilder, RelationQueryBuilder } from '../query';

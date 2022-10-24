@@ -1,9 +1,9 @@
-import { Class, getQueryRepositoryToken } from '@libs/nest-core';
+import { Class, getQueryRepositoryToken } from '@nest-query/api';
 import { FactoryProvider } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository, Connection, ConnectionOptions } from 'typeorm';
 import { TypeOrmQueryRepository, TenantAwareTypeOrmQueryRepository } from './repositories';
-import { IConnectionManager } from '@libs/nest-core/connection/connection.manager';
+import { IConnectionManager } from '@nest-query/api';
 
 function createTypeOrmQueryRepositoryProvider<Entity>(
   EntityClass: Class<Entity>,

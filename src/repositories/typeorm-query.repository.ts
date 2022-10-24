@@ -14,7 +14,7 @@ import {
   DeleteOneOptions,
   Filterable,
   IContext,
-} from '@libs/nest-core';
+} from '@nest-query/api';
 import { Repository, DeleteResult, DeepPartial as TypeOrmDeepPartial } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { MethodNotAllowedException, NotFoundException } from '@nestjs/common';
@@ -62,7 +62,7 @@ export class TypeOrmQueryRepository<Entity>
   }
 
   /**
-   * Query for multiple entities, using a Query from `@libs/nest-core`.
+   * Query for multiple entities, using a Query from `@nest-query/api`.
    *
    * @example
    * ```ts

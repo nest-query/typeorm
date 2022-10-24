@@ -1,5 +1,5 @@
 import { SelectQueryBuilder } from 'typeorm';
-import { AggregateQuery, AggregateResponse } from '@libs/nest-core';
+import { AggregateQuery, AggregateResponse } from '@nest-query/api';
 import { BadRequestException } from '@nestjs/common';
 import { camelCase } from 'camel-case';
 

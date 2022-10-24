@@ -1,4 +1,4 @@
-import { CommonFieldComparisonBetweenType, FilterComparisonOperators } from '@libs/nest-core';
+import { CommonFieldComparisonBetweenType, FilterComparisonOperators } from '@nest-query/api';
 import { ObjectLiteral } from 'typeorm';
 
 import { randomString } from '../common';

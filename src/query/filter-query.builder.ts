@@ -1,4 +1,4 @@
-import { Filter, Paging, Query, SortField, AggregateQuery, getFilterFields } from '@libs/nest-core';
+import { Filter, Paging, Query, SortField, AggregateQuery, getFilterFields } from '@nest-query/api';
 import {
   DeleteQueryBuilder,
   QueryBuilder,
