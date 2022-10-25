@@ -17,6 +17,9 @@ import {
   MapperFactory,
   FindRelationOptions,
   ModifyRelationOptions,
+  CursorResult,
+  CursorPaging,
+  CursorPagingOptions,
 } from '@nest-query/api';
 import {
   Repository,
@@ -37,6 +40,7 @@ import {
 import { IConnectionManager } from '@nest-query/api';
 import { omit, filter } from 'lodash';
 import { RelationMetadata } from 'typeorm/metadata/RelationMetadata';
+import { buildPaginator } from '../query/cursor.paginator';
 
 export interface TenantAwareTypeOrmQueryRepositoryOpts {
   useSoftDelete?: boolean;
@@ -69,6 +73,42 @@ export class TenantAwareTypeOrmQueryRepository<Entity>
     opts?: TenantAwareTypeOrmQueryRepositoryOpts,
   ) {
     this.useSoftDelete = opts?.useSoftDelete ?? false;
+  }
+
+  async cursorPaging(context: IContext, query: Query<Entity>, opts?: CursorPagingOptions<Entity>): Promise<CursorResult<Entity>> {
+    const connection = (await this.connectionManager.get(
+      context,
+    )) as Connection;
+    const repo = connection.getRepository(this.entityClass);
+    const filterQueryBuilder = new FilterQueryBuilder<Entity>(repo);
+
+    if (context.tenant && repo.metadata.hasColumnWithPropertyPath('tenant')) {
+      query.filter = query.filter || {};
+      query.filter.and = query.filter.and || [];
+      query.filter.and.push({
+        tenant: {
+          eq: context.tenant,
+        },
+      } as any);
+    }
+
+    const { filter, paging } = query;
+    const { limit = 20, order = 'ASC', after, before } = paging as CursorPaging;
+    
+    const paginator = buildPaginator<Entity>({
+      entity: this.entityClass,
+      ...( !!opts && opts),
+      paging: {
+        before,
+        after,
+        limit,
+        order,
+      },
+    });
+
+    const qb = filterQueryBuilder.select({ filter });
+
+    return await paginator.paginate(qb);
   }
 
   /**

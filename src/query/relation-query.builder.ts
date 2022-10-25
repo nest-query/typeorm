@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { AggregateQuery, Class, Query } from '@nest-query/api';
+import { AggregateQuery, Class, OffsetPaging, Query } from '@nest-query/api';
 import { Repository, SelectQueryBuilder, ObjectLiteral, Brackets } from 'typeorm';
 import { RelationMetadata } from 'typeorm/metadata/RelationMetadata';
 import { DriverUtils } from 'typeorm/driver/DriverUtils';
@@ -80,7 +80,7 @@ export class RelationQueryBuilder<Entity, Relation> {
         )
       : relationBuilder;
     relationBuilder = this.filterQueryBuilder.applyFilter(relationBuilder, query.filter, relationBuilder.alias);
-    relationBuilder = this.filterQueryBuilder.applyPaging(relationBuilder, query.paging);
+    relationBuilder = this.filterQueryBuilder.applyOffsetPaging(relationBuilder, query.paging as OffsetPaging);
     return this.filterQueryBuilder.applySorting(relationBuilder, query.sorting, relationBuilder.alias);
   }
 

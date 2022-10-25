@@ -14,12 +14,16 @@ import {
   DeleteOneOptions,
   Filterable,
   IContext,
+  CursorResult,
+  CursorPaging,
+  CursorPagingOptions,
 } from '@nest-query/api';
 import { Repository, DeleteResult, DeepPartial as TypeOrmDeepPartial } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { MethodNotAllowedException, NotFoundException } from '@nestjs/common';
 import { FilterQueryBuilder, AggregateBuilder } from '../query';
 import { RelationQueryRepository } from './relation-query.repository';
+import { buildPaginator } from '../query/cursor.paginator';
 
 export interface TypeOrmQueryRepositoryOpts<Entity> {
   useSoftDelete?: boolean;
@@ -59,6 +63,28 @@ export class TypeOrmQueryRepository<Entity>
   // eslint-disable-next-line @typescript-eslint/naming-convention
   get EntityClass(): Class<Entity> {
     return this.repo.target as Class<Entity>;
+  }
+
+
+
+  async cursorPaging(context: IContext, query: Query<Entity>, opts?: CursorPagingOptions<Entity>): Promise<CursorResult<Entity>> {
+    const { filter, paging } = query;
+    const { limit = 10, order = 'ASC', after, before } = paging as CursorPaging;
+    
+    const paginator = buildPaginator<Entity>({
+      entity: this.EntityClass,
+      ...( !!opts && opts),
+      paging: {
+        before,
+        after,
+        limit,
+        order,
+      },
+    });
+
+    const qb = this.filterQueryBuilder.select({ filter });
+
+    return await paginator.paginate(qb);
   }
 
   /**

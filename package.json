@@ -1,6 +1,6 @@
 {
   "name": "@nest-query/typeorm",
-  "version": "0.31.0",
+  "version": "0.32.0",
   "description": "Typeorm adapter for @nest-query/core",
   "author": "dev <dev@growingbox.cn>",
   "homepage": "https://github.com/newtalentxp/nest-query-typeorm#readme",
@@ -18,11 +18,12 @@
     "access": "public"
   },
   "dependencies": {
-    "@nest-query/api": "0.32.0",
+    "@nest-query/api": "0.40.0",
     "camel-case": "^4.1.2",
     "lodash.filter": "^4.6.0",
     "lodash.merge": "^4.6.2",
     "lodash.omit": "^4.5.0",
+    "msgpack5": "^5.3.2",
     "tslib": "^2.1.0",
     "uuid": "^8.3.2"
   },
@@ -38,6 +39,7 @@
     "@nestjs/typeorm": "8.0.2",
     "@types/lodash.filter": "4.6.6",
     "@types/lodash.omit": "4.5.6",
+    "@types/node": "^18.11.5",
     "@types/uuid": "8.3.4",
     "class-transformer": "0.4.0",
     "sqlite3": "5.0.2",

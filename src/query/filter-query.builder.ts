@@ -1,4 +1,4 @@
-import { Filter, Paging, Query, SortField, AggregateQuery, getFilterFields } from '@nest-query/api';
+import { Filter, Query, SortField, AggregateQuery, getFilterFields, OffsetPaging, CursorPaging } from '@nest-query/api';
 import {
   DeleteQueryBuilder,
   QueryBuilder,
@@ -72,10 +72,11 @@ export class FilterQueryBuilder<Entity> {
       : qb;
     qb = this.applyFilter(qb, query.filter, qb.alias);
     qb = this.applySorting(qb, query.sorting, qb.alias);
-    qb = this.applyPaging(qb, query.paging, hasRelations);
+    qb = this.applyOffsetPaging(qb, query.paging as OffsetPaging, hasRelations);
+
     return qb;
   }
-
+  
   selectById(id: string | number | object | (string | number)[], query: Query<Entity>): SelectQueryBuilder<Entity> {
     const hasRelations = this.filterHasRelations(query.filter);
     let qb = this.createQueryBuilder();
@@ -85,7 +86,7 @@ export class FilterQueryBuilder<Entity> {
     qb = qb.andWhereInIds(id);
     qb = this.applyFilter(qb, query.filter, qb.alias);
     qb = this.applySorting(qb, query.sorting, qb.alias);
-    qb = this.applyPaging(qb, query.paging, hasRelations);
+    qb = this.applyOffsetPaging(qb, query.paging, hasRelations);
     return qb;
   }
 
@@ -140,7 +141,7 @@ export class FilterQueryBuilder<Entity> {
    * @param paging - the Paging options.
    * @param useSkipTake - if skip/take should be used instead of limit/offset.
    */
-  applyPaging<P extends Pageable<Entity>>(qb: P, paging?: Paging, useSkipTake?: boolean): P {
+  applyOffsetPaging<P extends Pageable<Entity>>(qb: P, paging?: OffsetPaging, useSkipTake?: boolean): P {
     if (!paging) {
       return qb;
     }
@@ -150,6 +151,10 @@ export class FilterQueryBuilder<Entity> {
     }
 
     return qb.limit(paging.limit).offset(paging.offset);
+  }
+
+  applyCursorPaging<P extends Pageable<Entity>>(qb: P, paging?: CursorPaging) {
+    
   }
 
   /**
