@@ -1,6 +1,6 @@
 {
   "name": "@nest-query/typeorm",
-  "version": "0.34.0",
+  "version": "0.35.0",
   "description": "Typeorm adapter for @nest-query/core",
   "author": "dev <dev@growingbox.cn>",
   "homepage": "https://github.com/newtalentxp/nest-query-typeorm#readme",
