@@ -28,10 +28,10 @@ export function buildPaginator<Entity>(options: PaginationOptions<Entity>): Pagi
     paging = {},
     alias = entity.name.toLowerCase(),
     paginationKeys = ['id' as any],
-    paginationUniqueKey = 'id' as any,
+    // paginationUniqueKey = 'id' as any,
   } = options;
 
-  const paginator = new Paginator(entity, paginationKeys, paginationUniqueKey);
+  const paginator = new Paginator(entity, paginationKeys/*, paginationUniqueKey*/);
 
   paginator.setAlias(alias);
 
@@ -90,7 +90,7 @@ export default class Paginator<Entity> {
   public constructor(
     private entity: ObjectType<Entity>,
     private paginationKeys: Extract<keyof Entity, string>[],
-    private paginationUniqueKey: Extract<keyof Entity, string>,
+    // private paginationUniqueKey: Extract<keyof Entity, string>,
   ) {}
 
   public setAlias(alias: string): void {
@@ -181,7 +181,6 @@ export default class Paginator<Entity> {
     const params: CursorParam = {};
     
     const ands: Brackets[] = [];
-    const ors: Brackets[] = [];
 
     this.paginationKeys.forEach((key) => {
       params[key] = cursors[key];
@@ -194,12 +193,10 @@ export default class Paginator<Entity> {
         qb.where(`${this.alias}.${key} ${operator} :${key}_1`, paramsHolder);
       }));
 
-      ors.push(new Brackets((qb) => {
-        qb.andWhere(ands);
+      where.orWhere(new Brackets((qb) => {
+        ands.forEach((it ) => qb.andWhere(it));
       }));
     });
-
-    where.orWhere(ors);
   }
 
   private getOperator(): string {
