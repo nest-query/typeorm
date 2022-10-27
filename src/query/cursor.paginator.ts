@@ -179,21 +179,27 @@ export default class Paginator<Entity> {
   ): void {
     const operator = this.getOperator();
     const params: CursorParam = {};
+    
+    const ands: Brackets[] = [];
+    const ors: Brackets[] = [];
+
     this.paginationKeys.forEach((key) => {
       params[key] = cursors[key];
-      where.andWhere(
-        new Brackets((qb) => {
-          const paramsHolder = {
-            [`${key}_1`]: params[key],
-            [`${key}_2`]: params[key],
-          };
-          qb.where(`${this.alias}.${key} ${operator} :${key}_1`, paramsHolder);
-          if (this.paginationUniqueKey !== key) {
-            qb.orWhere(`${this.alias}.${key} = :${key}_2`, paramsHolder);
-          }
-        }),
-      );
+      
+      ands.push(new Brackets((qb) => {
+        const paramsHolder = {
+          [`${key}_1`]: params[key],
+          [`${key}_2`]: params[key],
+        };
+        qb.where(`${this.alias}.${key} ${operator} :${key}_1`, paramsHolder);
+      }));
+
+      ors.push(new Brackets((qb) => {
+        qb.andWhere(ands);
+      }));
     });
+
+    where.orWhere(ors);
   }
 
   private getOperator(): string {
