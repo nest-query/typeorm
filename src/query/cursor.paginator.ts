@@ -6,7 +6,7 @@ import {
   WhereExpressionBuilder,
 } from 'typeorm';
 
-import * as msgpack from 'msgpack5';
+const msgpack = require('msgpack5')()
 import { CursorPageInfo, CursorPaging, CursorResult, SortDirection } from '@nest-query/api';
 
 
@@ -233,11 +233,11 @@ export default class Paginator<Entity> {
 
   private encode(entity: Entity): string {
     const payload = this.paginationKeys.map((k) => ({ k: entity[k] }));
-    return msgpack().encode(payload);
+    return msgpack.encode(payload);
   }
 
   private decode(buf: string): CursorParam {
-    return msgpack().decode(buf);
+    return msgpack.decode(buf);
   }
 
   private flipOrder(order: SortDirection): SortDirection {
