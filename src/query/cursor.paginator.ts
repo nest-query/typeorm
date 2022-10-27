@@ -19,7 +19,6 @@ export interface PaginationOptions<Entity> {
   alias?: string;
   paging?: CursorPaging;
   paginationKeys?: Extract<keyof Entity, string>[];
-  paginationUniqueKey?: Extract<keyof Entity, string>;
 }
 
 export function buildPaginator<Entity>(options: PaginationOptions<Entity>): Paginator<Entity> {
@@ -28,10 +27,9 @@ export function buildPaginator<Entity>(options: PaginationOptions<Entity>): Pagi
     paging = {},
     alias = entity.name.toLowerCase(),
     paginationKeys = ['id' as any],
-    // paginationUniqueKey = 'id' as any,
   } = options;
 
-  const paginator = new Paginator(entity, paginationKeys/*, paginationUniqueKey*/);
+  const paginator = new Paginator(entity, paginationKeys);
 
   paginator.setAlias(alias);
 
@@ -90,7 +88,6 @@ export default class Paginator<Entity> {
   public constructor(
     private entity: ObjectType<Entity>,
     private paginationKeys: Extract<keyof Entity, string>[],
-    // private paginationUniqueKey: Extract<keyof Entity, string>,
   ) {}
 
   public setAlias(alias: string): void {
