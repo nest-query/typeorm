@@ -232,7 +232,8 @@ export default class Paginator<Entity> {
   }
 
   private encode(entity: Entity): string {
-    const payload = this.paginationKeys.map((k) => ({ k: entity[k] }));
+    const payload = {} as Record<string, any>;
+    this.paginationKeys.forEach((k) => { payload[k] = entity[k] });
     return msgpack.encode(payload).toString('hex');
   }
 
