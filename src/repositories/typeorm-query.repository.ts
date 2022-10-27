@@ -69,10 +69,12 @@ export class TypeOrmQueryRepository<Entity>
 
   async cursorPaging(context: IContext, query: Query<Entity>, opts?: CursorPagingOptions<Entity>): Promise<CursorResult<Entity>> {
     const { filter, paging } = query;
-    const { limit = 10, order = 'ASC', after, before } = paging as CursorPaging;
+    const qb = this.filterQueryBuilder.select({ filter });
     
+    const { limit = 10, order = 'ASC', after, before } = paging as CursorPaging;
     const paginator = buildPaginator<Entity>({
       entity: this.EntityClass,
+      alias: qb.alias,
       ...( !!opts && opts),
       paging: {
         before,
@@ -81,8 +83,6 @@ export class TypeOrmQueryRepository<Entity>
         order,
       },
     });
-
-    const qb = this.filterQueryBuilder.select({ filter });
 
     return await paginator.paginate(qb);
   }
