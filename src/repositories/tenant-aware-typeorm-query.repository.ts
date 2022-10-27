@@ -93,10 +93,13 @@ export class TenantAwareTypeOrmQueryRepository<Entity>
     }
 
     const { filter, paging } = query;
+    const qb = filterQueryBuilder.select({ filter });
+
     const { limit = 20, order = 'ASC', after, before } = paging as CursorPaging;
     
     const paginator = buildPaginator<Entity>({
       entity: this.entityClass,
+      alias: qb.alias,
       ...( !!opts && opts),
       paging: {
         before,
@@ -105,8 +108,6 @@ export class TenantAwareTypeOrmQueryRepository<Entity>
         order,
       },
     });
-
-    const qb = filterQueryBuilder.select({ filter });
 
     return await paginator.paginate(qb);
   }
