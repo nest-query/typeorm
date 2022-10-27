@@ -233,10 +233,11 @@ export default class Paginator<Entity> {
 
   private encode(entity: Entity): string {
     const payload = this.paginationKeys.map((k) => ({ k: entity[k] }));
-    return msgpack.encode(payload);
+    return msgpack.encode(payload).toString('hex');
   }
 
-  private decode(buf: string): CursorParam {
+  private decode(str: string): CursorParam {
+    const buf = Buffer.from(str, 'hex');
     return msgpack.decode(buf);
   }
 
