@@ -16,7 +16,6 @@ import {
   IContext,
   CursorResult,
   CursorPaging,
-  CursorPagingOptions,
 } from '@nest-query/api';
 import { Repository, DeleteResult, DeepPartial as TypeOrmDeepPartial } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
@@ -67,15 +66,24 @@ export class TypeOrmQueryRepository<Entity>
 
 
 
-  async cursorPaging(context: IContext, query: Query<Entity>, opts?: CursorPagingOptions<Entity>): Promise<CursorResult<Entity>> {
+  async cursorPaging(context: IContext, query: Query<Entity>): Promise<CursorResult<Entity>> {
     const { filter, paging } = query;
     const qb = this.filterQueryBuilder.select({ filter });
-    
+
+    let paginationKeys: Extract<keyof Entity, string>[] = [];
+    if (query.sorting) {
+      paginationKeys = query.sorting.map(it => it.field as any);
+    }
+
+    if (paginationKeys.indexOf('id' as any) === -1) {
+      paginationKeys.push('id' as any);
+    }
+
     const { limit = 10, order = 'ASC', after, before } = paging as CursorPaging;
     const paginator = buildPaginator<Entity>({
       entity: this.EntityClass,
       alias: qb.alias,
-      ...( !!opts && opts),
+      paginationKeys,
       paging: {
         before,
         after,

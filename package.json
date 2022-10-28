@@ -1,6 +1,6 @@
 {
   "name": "@nest-query/typeorm",
-  "version": "0.41.0",
+  "version": "0.43.0",
   "description": "Typeorm adapter for @nest-query/core",
   "author": "dev <dev@growingbox.cn>",
   "homepage": "https://github.com/newtalentxp/nest-query-typeorm#readme",
@@ -18,7 +18,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@nest-query/api": "0.41.0",
+    "@nest-query/api": "0.42.0",
     "camel-case": "^4.1.2",
     "lodash.filter": "^4.6.0",
     "lodash.merge": "^4.6.2",

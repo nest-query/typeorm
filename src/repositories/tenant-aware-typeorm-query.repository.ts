@@ -19,7 +19,6 @@ import {
   ModifyRelationOptions,
   CursorResult,
   CursorPaging,
-  CursorPagingOptions,
 } from '@nest-query/api';
 import {
   Repository,
@@ -75,7 +74,7 @@ export class TenantAwareTypeOrmQueryRepository<Entity>
     this.useSoftDelete = opts?.useSoftDelete ?? false;
   }
 
-  async cursorPaging(context: IContext, query: Query<Entity>, opts?: CursorPagingOptions<Entity>): Promise<CursorResult<Entity>> {
+  async cursorPaging(context: IContext, query: Query<Entity>): Promise<CursorResult<Entity>> {
     const connection = (await this.connectionManager.get(
       context,
     )) as Connection;
@@ -96,11 +95,19 @@ export class TenantAwareTypeOrmQueryRepository<Entity>
     const qb = filterQueryBuilder.select({ filter });
 
     const { limit = 20, order = 'ASC', after, before } = paging as CursorPaging;
+    let paginationKeys: Extract<keyof Entity, string>[] = [];
+    if (query.sorting) {
+      paginationKeys = query.sorting.map(it => it.field as any);
+    }
     
+    if (paginationKeys.indexOf('id' as any) === -1) {
+      paginationKeys.push('id' as any);
+    }
+
     const paginator = buildPaginator<Entity>({
       entity: this.entityClass,
       alias: qb.alias,
-      ...( !!opts && opts),
+      paginationKeys,
       paging: {
         before,
         after,
