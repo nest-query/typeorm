@@ -188,14 +188,14 @@ export default class Paginator<Entity> {
             [`${it}_1`]: params[it],
             [`${it}_2`]: params[key],
           };
-          qb.where(`${this.alias}.${it} = :${it}_1`, paramsHolder);  
+          qb.andWhere(`${this.alias}.${it} = :${it}_1`, paramsHolder);  
         })
 
         const paramsHolder = {
           [`${key}_1`]: params[key],
           [`${key}_2`]: params[key],
         };
-        qb.where(`${this.alias}.${key} ${operator} :${key}_1`, paramsHolder);
+        qb.andWhere(`${this.alias}.${key} ${operator} :${key}_1`, paramsHolder);
       }));
 
       keys.push(key);
